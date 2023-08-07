@@ -1,24 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import { Box, Container } from '@chakra-ui/react';
+import Table from './Table';
+import SearchBar from './Searchbar';
+import { scrapeWebsiteFromSitemap } from './WebScrapping/WebScrapping';
+import { useState } from 'react';
 
 function App() {
+  const [loading, setLoading] = useState(false);
+  const [searchText, setInputSearch] = useState('');
+
+  const handleOnSearch = (e) => {
+    setInputSearch(e.target.value);
+  };
+
+  const handleClickOnSearch = async (url) => {
+    setLoading(true);
+    const req = await scrapeWebsiteFromSitemap(url);
+    setLoading(false);
+
+    console.log(req);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box
+      // bgGradient='linear(to right, #4FD1C5, #4361EE)'
+      w='100%'
+      h='100vh'
+      display='flex'
+      flexDirection='column'
+      justifyContent='center'
+      alignItems='center'>
+      <SearchBar handleOnSearch={handleOnSearch} handleClickOnSearch={handleClickOnSearch} loading={loading} searchText={searchText} />
+      <Table />
+    </Box>
   );
 }
 
