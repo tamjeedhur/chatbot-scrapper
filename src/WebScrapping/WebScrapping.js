@@ -268,44 +268,47 @@
 // const fs = require('fs');
 // const axios = require('axios');
 // const cheerio = require('cheerio');
-import axios from 'axios';
-import cheerio from 'cheerio';
 
-const mainSitemapUrl = 'https://theparkprodigy.com/sitemap_index.xml';
 
-const outputFilePath = 'urls.json';
 
-async function scrapeWebsiteFromSitemap(url) {
-  // try {
+// import axios from 'axios';
+// import cheerio from 'cheerio';
+
+// const mainSitemapUrl = 'https://theparkprodigy.com/sitemap_index.xml';
+
+// const outputFilePath = 'urls.json';
+
+// async function scrapeWebsiteFromSitemap(url) {
+//   // try {
   
-  console.log(url)
-    const sitemapResponse = await axios.get(url);
-    const sitemapXML = sitemapResponse.data;
+//   console.log(url)
+//     const sitemapResponse = await axios.get(url);
+//     const sitemapXML = sitemapResponse.data;
 
-    // Parse the sitemap XML to extract sub-sitemap URLs
-    const $ = cheerio.load(sitemapXML, { xmlMode: true });
-    const sitemapUrls = $('sitemap loc')
-      .map((index, element) => $(element).text())
-      .get();
+//     // Parse the sitemap XML to extract sub-sitemap URLs
+//     const $ = cheerio.load(sitemapXML, { xmlMode: true });
+//     const sitemapUrls = $('sitemap loc')
+//       .map((index, element) => $(element).text())
+//       .get();
 
-    const scrapedUrls = [];
+//     const scrapedUrls = [];
 
-    // Scrape each sub-sitemap
-    for (const sitemapUrl of sitemapUrls) {
-      const subSitemapResponse = await axios.get(sitemapUrl);
-      const subSitemapXML = subSitemapResponse.data;
+//     // Scrape each sub-sitemap
+//     for (const sitemapUrl of sitemapUrls) {
+//       const subSitemapResponse = await axios.get(sitemapUrl);
+//       const subSitemapXML = subSitemapResponse.data;
 
-      // Parse the sub-sitemap XML to extract URLs
-      const $ = cheerio.load(subSitemapXML, { xmlMode: true });
-      const urls = $('url loc')
-        .map((index, element) => $(element).text())
-        .get();
+//       // Parse the sub-sitemap XML to extract URLs
+//       const $ = cheerio.load(subSitemapXML, { xmlMode: true });
+//       const urls = $('url loc')
+//         .map((index, element) => $(element).text())
+//         .get();
 
-      console.log('URL:', urls);
-      // console.log('Title:', title);
+//       console.log('URL:', urls);
+//       // console.log('Title:', title);
 
-      // Store the URL in the scrapedUrls array
-      scrapedUrls.push(urls);
+//       // Store the URL in the scrapedUrls array
+//       scrapedUrls.push(urls);
 
       // for (const url of urls) {
       //   try {
@@ -324,7 +327,7 @@ async function scrapeWebsiteFromSitemap(url) {
       //   }
       // }
       //   }
-    }
+ //   }
 
     // Save the scrapedUrls array to a JSON file
     // const jsonData = JSON.stringify(scrapedUrls, null, 2);
@@ -333,8 +336,54 @@ async function scrapeWebsiteFromSitemap(url) {
   // } catch (error) {
   //   console.error('Error:', error.message);
   // }
-}
+// }
 
 // scrapeWebsiteFromSitemap(mainSitemapUrl);
 
-export { scrapeWebsiteFromSitemap };
+// export { scrapeWebsiteFromSitemap };
+
+
+
+
+const axios = require("axios");
+const cheerio = require("cheerio");
+
+const mainSitemapUrl = "https://theparkprodigy.com/sitemap_index.xml";
+
+const outputFilePath = "urls.json";
+
+async function scrapeWebsiteFromSitemap(url) {
+  console.log(url);
+  const sitemapResponse = await axios.get(url);
+  const sitemapXML = sitemapResponse.data;
+
+  // Parse the sitemap XML to extract sub-sitemap URLs
+  const $ = cheerio.load(sitemapXML, { xmlMode: true });
+  const sitemapUrls = $("sitemap loc")
+    .map((index, element) => $(element).text())
+    .get();
+
+  const scrapedUrls = [];
+
+  // Scrape each sub-sitemap
+  for (const sitemapUrl of sitemapUrls) {
+    const subSitemapResponse = await axios.get(sitemapUrl);
+    const subSitemapXML = subSitemapResponse.data;
+
+    // Parse the sub-sitemap XML to extract URLs
+    const $ = cheerio.load(subSitemapXML, { xmlMode: true });
+    const urls = $("url loc")
+      .map((index, element) => $(element).text())
+      .get();
+    scrapedUrls.push(urls);
+
+  }
+
+  return scrapedUrls;
+
+}
+module.exports = { scrapeWebsiteFromSitemap };
+
+
+
+
